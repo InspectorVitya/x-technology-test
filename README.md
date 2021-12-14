@@ -8,21 +8,21 @@
 
 На входе будет следущая структура:
 
-    ```js
-    [{symbol: [string], price_24h: [float64], volume_24h: [float64], last_trade_price: [float64]}...]
-    ```
+```javascript
+[{symbol: [string], price_24h: [float64], volume_24h: [float64], last_trade_price: [float64]}...]
+```
 
 На выходе список должен иметь следующий вид:
 
-    ```js
-    {<symbol>: {price: <price_24h>, volume: <volume_24h>, last_trade: <last_trade_price>}...}
-    ```
+```js
+{<symbol>: {price: <price_24h>, volume: <volume_24h>, last_trade: <last_trade_price>}...}
+```
 
 ## Пример
 
 Входные данные:
 
-    ```json
+```json
     [
         {
             "symbol":"XLM-EUR",
@@ -31,11 +31,11 @@
             "last_trade_price":0.24
         }
     ]
-    ```
+```
 
 Выходные данные:
 
-    ```json
+```json
     {
         "XLM-EUR": {
             "price": 0.25685,
@@ -43,7 +43,7 @@
             "last_trade":0.24
         }
     }
-    ```
+```
 
 ## Дополнительно
 
