@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: pg_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${PG_USER-postgres}
+      POSTGRES_PASSWORD: ${PG_PSW-postgres}
+      POSTGRES_DB: ${PG_DB-stocks}
+      PGDATA: /data/postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      - db
+      - migration
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: user=${PG_USER-postgres} password=${PG_PSW-postgres} dbname=${PG_DB-stocks} host=db sslmode=disable
+    depends_on:
+      - db
+    restart: on-failure
+    networks:
+      - migration
+      - db
+  app:
+    container_name: stocks-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT_HTTP-8080}:${PORT_HTTP-8080}"
+    environment:
+      DB_URL: user=${PG_USER-postgres} password=${PG_PSW-postgres} dbname=${PG_DB-stocks} host=db sslmode=disable
+      PORT_HTTP: 8080
+    depends_on:
+      - db
+    networks:
+      - app
+      - db
+
+
+networks:
+  db:
+    driver: bridge
+  migration:
+    driver: bridge
+  app:
+    driver: bridge
+volumes:
+  data:
